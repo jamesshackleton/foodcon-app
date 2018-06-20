@@ -12,7 +12,7 @@ starterbot_id = None
 
 # constants
 RTM_READ_DELAY = 1 # 1 second delay between reading from RTM
-FOODCON_BOT_VERSION = "v0.2 - Early Alpha - Now with crappy food and location commands!"
+FOODCON_BOT_VERSION = "v0.2.1 - Early Alpha - Now with crappy food and location commands!"
 FOODCON_HELP_COMMAND = "help"
 FOODCON_SET_COMMAND = "set"
 FOODCON_STATUS_COMMAND = "status"
@@ -58,7 +58,6 @@ def handle_command(command, channel):
     global foodcon_food
     global foodcon_location
 
-
     # This is where you start to implement more commands!
 
     # ========================================= SET ====================================================================
@@ -93,19 +92,14 @@ def handle_command(command, channel):
     if command.casefold().startswith(FOODCON_SET_FOOD_DETAILS):
 
         foodcon_food = command.split("food", 1)[1]
-        response = "Rodger dodger, your entry of *" +foodcon_food+ "* has been successfully registered. Re-do this command to overwrite."
 
     # ========================================= FOOD_LOCATION ===========================================================
 
     if command.casefold().startswith(FOODCON_SET_FOOD_LOCATION):
 
         foodcon_location = command.split("location", 1)[1]
-        response = "Rodger dodger, your location entry of *" +foodcon_location+ "* has been successfully registered. Re-do this command to overwrite."
-
 
     # ========================================= STATUS =================================================================
-
-
 
     if command.casefold().startswith(FOODCON_STATUS_COMMAND): #& foodcon_level is '1' or '2' or '3' or '4' or '5':
         try:
@@ -120,18 +114,20 @@ def handle_command(command, channel):
                                                           "'@foodcon `command`'\n Commands: \n \n *" +FOODCON_STATUS_COMMAND+ \
                                                       "* - Returns the current FOODCON level. \n *" +FOODCON_SET_COMMAND+ \
                                                             "* `1`, `2`, `3`, `4` or `5` - Sets the FOODCON level " \
-                                                                            "to the specified value."
+                                                                            "to the specified value. \n *" +FOODCON_SET_FOOD_DETAILS+ "* " \
+                                                                                                                                      "`name/types of food` - Adds this to the `status` command \n *" \
+                                                                                                                                      +FOODCON_SET_FOOD_LOCATION+ "* `location of food` - Adds this to the `status` command"
 
 
     # Sends the response back to the channel
     slack_client.api_call(
         "chat.postMessage",
-        channel=channel,
-        text=response or default_response
+        channel = channel,
+        text = response or default_response
     )
 
 if __name__ == "__main__":
-    if slack_client.rtm_connect(with_team_state=False):
+    if slack_client.rtm_connect(with_team_state = False):
         print("Starter Bot connected and running!")
         # Read bot's user ID by calling Web API method `auth.test`
         starterbot_id = slack_client.api_call("auth.test")["user_id"]
