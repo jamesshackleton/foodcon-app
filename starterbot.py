@@ -12,12 +12,13 @@ starterbot_id = None
 
 # constants
 RTM_READ_DELAY = 1 # 1 second delay between reading from RTM
-FOODCON_BOT_VERSION = "v0.2.1 - Early Alpha - Now with crappy food and location commands!"
+FOODCON_BOT_VERSION = "v0.2 - Early Alpha - Now with crappy food and location commands!"
 FOODCON_HELP_COMMAND = "help"
 FOODCON_SET_COMMAND = "set"
 FOODCON_STATUS_COMMAND = "status"
 FOODCON_SET_FOOD_DETAILS = "food"
 FOODCON_SET_FOOD_LOCATION = "location"
+BOI_DOT_GIF = "https://i.imgur.com/rLgVcmk.gif"
 
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 
@@ -87,21 +88,27 @@ def handle_command(command, channel):
         response = "FOODCON SET TO FOODCON5. I REPEAT. *FOODCON 5*. STAND DOWN."
         foodcon_level = str(5)
 
+    if command == "boi":
+        response = BOI_DOT_GIF
+
     # ========================================= FOOD_DETAILS ===========================================================
 
     if command.casefold().startswith(FOODCON_SET_FOOD_DETAILS):
 
         foodcon_food = command.split("food", 1)[1]
+        response = "OK, got it. Sounds tasty :eyes:"
 
     # ========================================= FOOD_LOCATION ===========================================================
 
     if command.casefold().startswith(FOODCON_SET_FOOD_LOCATION):
 
         foodcon_location = command.split("location", 1)[1]
+        response = "OK, got it. I'll be paying a visit :eyes:"
 
     # ========================================= STATUS =================================================================
 
     if command.casefold().startswith(FOODCON_STATUS_COMMAND): #& foodcon_level is '1' or '2' or '3' or '4' or '5':
+
         try:
             response = "WE ARE CURRENTLY AT *FOODCON " +foodcon_level+ "* | *LOCATION*: " +foodcon_location+ " *FOOD*: " +foodcon_food+ ""
         except NameError:
@@ -109,7 +116,7 @@ def handle_command(command, channel):
 
     # ========================================= HELP ===================================================================
 
-    if command.casefold().startswith(FOODCON_HELP_COMMAND):                         #monstrosity #TODO: Update with food, location and status commands
+    if command.casefold().startswith(FOODCON_HELP_COMMAND):                         #monstrosity
         response = "FOODCON App - " +FOODCON_BOT_VERSION+ "\n This is currently a primitive bot, all commands must be " \
                                                           "'@foodcon `command`'\n Commands: \n \n *" +FOODCON_STATUS_COMMAND+ \
                                                       "* - Returns the current FOODCON level. \n *" +FOODCON_SET_COMMAND+ \
