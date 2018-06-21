@@ -3,7 +3,7 @@ Playing with Slack API and Python
 
 Base code used for a basic Python Slackbot found [here](https://www.fullstackpython.com/blog/build-first-slack-bot-python.html)
 
-If you're a rando, go away.
+Probably not useful to you if you're not part of the bois
 
 ## Pre-requisites (I think)
 
