@@ -112,7 +112,7 @@ def handle_command(command, channel):
         try:
             response = "WE ARE CURRENTLY AT *FOODCON " +foodcon_level+ "* | *LOCATION*: " +foodcon_location+ " *FOOD*: " +foodcon_food+ ""
         except NameError:
-            response = "The FOODCON level must be set before you can use this command. Try 'set `value`'"
+            response = "The FOODCON level is currently at 5. Please await further developments."
 
     # ========================================= HELP ===================================================================
 
