@@ -87,6 +87,8 @@ def handle_command(command, channel):
 
         response = "FOODCON SET TO FOODCON5. I REPEAT. *FOODCON 5*. STAND DOWN."
         foodcon_level = str(5)
+        foodcon_food = 'No food'
+        foodcon_location = 'No location'
 
     if command == "boi":
         response = BOI_DOT_GIF
