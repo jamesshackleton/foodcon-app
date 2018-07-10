@@ -19,6 +19,10 @@ FOODCON_STATUS_COMMAND = "status"
 FOODCON_SET_FOOD_DETAILS = "food"
 FOODCON_SET_FOOD_LOCATION = "location"
 BOI_DOT_GIF = "https://i.imgur.com/rLgVcmk.gif"
+foodcon_food = None
+foodcon_level = None
+foodcon_location = None
+
 
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 
@@ -112,7 +116,14 @@ def handle_command(command, channel):
     if command.casefold().startswith(FOODCON_STATUS_COMMAND): #& foodcon_level is '1' or '2' or '3' or '4' or '5':
 
         try:
-            response = "WE ARE CURRENTLY AT *FOODCON " +foodcon_level+ "* | *LOCATION*: " +foodcon_location+ " *FOOD*: " +foodcon_food+ ""
+            if foodcon_level is None:
+                foodcon_level = '5'
+            if foodcon_food is None:
+                foodcon_food = 'No food'
+            if foodcon_location is None:
+                foodcon_location = 'No location'
+
+            response = "WE ARE CURRENTLY AT *FOODCON " + foodcon_level + "* | *LOCATION*: " + foodcon_location + " *FOOD*: " + foodcon_food + ""
         except NameError:
             response = "The FOODCON level is currently at 5. Please await further developments."
 
