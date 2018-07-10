@@ -125,7 +125,7 @@ def handle_command(command, channel):
 
             response = "WE ARE CURRENTLY AT *FOODCON " + foodcon_level + "* | *LOCATION*: " + foodcon_location + " *FOOD*: " + foodcon_food + ""
         except NameError:
-            response = "The FOODCON level is currently at 5. Please await further developments."
+            response = "If you're seeing this, a NameError exception has occured. Shit's fucked yo."
 
     # ========================================= HELP ===================================================================
 
