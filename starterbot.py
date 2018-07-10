@@ -1,9 +1,8 @@
 import os
 import time
-import re
 from enum import Enum
 from slackclient import SlackClient
-
+import re
 
 # instantiate Slack client
 slack_client = SlackClient("xoxb-283048524000-383343305728-Q39KhMKxPfcY1a3g4XJThCiM")
@@ -11,18 +10,17 @@ slack_client = SlackClient("xoxb-283048524000-383343305728-Q39KhMKxPfcY1a3g4XJTh
 starterbot_id = None
 
 # constants
-RTM_READ_DELAY = 1 # 1 second delay between reading from RTM
+RTM_READ_DELAY = 1  # 1 second delay between reading from RTM
 FOODCON_BOT_VERSION = "v0.2 - Early Alpha - Now with crappy food and location commands!"
 FOODCON_HELP_COMMAND = "help"
-FOODCON_SET_COMMAND = "set"
+FOODCON_SET_COMMAND = "set "
 FOODCON_STATUS_COMMAND = "status"
-FOODCON_SET_FOOD_DETAILS = "food"
-FOODCON_SET_FOOD_LOCATION = "location"
+FOODCON_SET_FOOD_DETAILS = "food "
+FOODCON_SET_FOOD_LOCATION = "location "
 BOI_DOT_GIF = "https://i.imgur.com/rLgVcmk.gif"
 foodcon_food = None
 foodcon_level = None
 foodcon_location = None
-
 
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 
@@ -40,6 +38,7 @@ def parse_bot_commands(slack_events):
                 return message, event["channel"]
     return None, None
 
+
 def parse_direct_mention(message_text):
     """
         Finds a direct mention (a mention that is at the beginning) in message text
@@ -48,6 +47,7 @@ def parse_direct_mention(message_text):
     matches = re.search(MENTION_REGEX, message_text)
     # the first group contains the username, the second group contains the remaining message
     return (matches.group(1), matches.group(2).strip()) if matches else (None, None)
+
 
 def handle_command(command, channel):
     """
@@ -67,28 +67,14 @@ def handle_command(command, channel):
 
     # ========================================= SET ====================================================================
 
-    if command.casefold().startswith(FOODCON_SET_COMMAND) & command.endswith("1"):
+    if command.casefold().startswith(FOODCON_SET_COMMAND):
+        option = command.casefold().split(FOODCON_SET_COMMAND)[1]
+        one_to_four = ["1", "2", "3", "4"]
+        if option in one_to_four:
+            response = ":alert: FOODCON RAISED TO FOODCON " + option + ". I REPEAT. *FOODCON " + option + " *. :alert:"
+            foodcon_level = option
 
-        response = ":alert: FOODCON RAISED TO FOODCON 1. I REPEAT. *FOODCON 1*. :alert:"
-        foodcon_level = str(1)
-
-    if command.casefold().startswith(FOODCON_SET_COMMAND) & command.endswith("2"):
-
-        response = ":alert: FOODCON SET TO FOODCON 2. I REPEAT. *FOODCON 2*. :alert:"
-        foodcon_level = str(2)
-
-    if command.casefold().startswith(FOODCON_SET_COMMAND) & command.endswith("3"):
-
-        response = ":alert: FOODCON SET TO FOODCON 3. I REPEAT. *FOODCON 3*. :alert:"
-        foodcon_level = str(3)
-
-    if command.casefold().startswith(FOODCON_SET_COMMAND) & command.endswith("4"):
-
-        response = ":alert: FOODCON SET TO FOODCON 4. I REPEAT. *FOODCON 4*. :alert:"
-        foodcon_level = str(4)
-
-    if command.casefold().startswith(FOODCON_SET_COMMAND) & command.endswith("5"):
-
+    if command.casefold().startswith(FOODCON_SET_COMMAND) and option == "5":
         response = "FOODCON SET TO FOODCON5. I REPEAT. *FOODCON 5*. STAND DOWN."
         foodcon_level = str(5)
         foodcon_food = 'No food'
@@ -100,20 +86,18 @@ def handle_command(command, channel):
     # ========================================= FOOD_DETAILS ===========================================================
 
     if command.casefold().startswith(FOODCON_SET_FOOD_DETAILS):
-
-        foodcon_food = command.split("food", 1)[1]
+        foodcon_food = command.casefold().split("food", 1)[1]
         response = "OK, got it. Sounds tasty :eyes:"
 
-    # ========================================= FOOD_LOCATION ===========================================================
+    # ========================================= FOOD_LOCATION ==========================================================
 
     if command.casefold().startswith(FOODCON_SET_FOOD_LOCATION):
-
-        foodcon_location = command.split("location", 1)[1]
+        foodcon_location = command.casefold().split("location", 1)[1]
         response = "OK, got it. I'll be paying a visit :eyes:"
 
     # ========================================= STATUS =================================================================
 
-    if command.casefold().startswith(FOODCON_STATUS_COMMAND): #& foodcon_level is '1' or '2' or '3' or '4' or '5':
+    if command.casefold() == FOODCON_STATUS_COMMAND:  # & foodcon_level is '1' or '2' or '3' or '4' or '5':
 
         try:
             if foodcon_level is None:
@@ -129,25 +113,27 @@ def handle_command(command, channel):
 
     # ========================================= HELP ===================================================================
 
-    if command.casefold().startswith(FOODCON_HELP_COMMAND):                         #monstrosity
-        response = "FOODCON App - " +FOODCON_BOT_VERSION+ "\n This is currently a primitive bot, all commands must be " \
-                                                          "'@foodcon `command`'\n Commands: \n \n *" +FOODCON_STATUS_COMMAND+ \
-                                                      "* - Returns the current FOODCON level. \n *" +FOODCON_SET_COMMAND+ \
-                                                            "* `1`, `2`, `3`, `4` or `5` - Sets the FOODCON level " \
-                                                                            "to the specified value. \n *" +FOODCON_SET_FOOD_DETAILS+ "* " \
-                                                                                                                                      "`name/types of food` - Adds this to the `status` command \n *" \
-                                                                                                                                      +FOODCON_SET_FOOD_LOCATION+ "* `location of food` - Adds this to the `status` command"
-
+    if command.casefold() == FOODCON_HELP_COMMAND:  # monstrosity
+        response = "FOODCON App - " + FOODCON_BOT_VERSION + "\n This is currently a primitive bot, all commands must " \
+                                                            "be " \
+                                                            "'@foodcon `command`'\n Commands: \n \n *" + FOODCON_STATUS_COMMAND + \
+                   "* - Returns the current FOODCON level. \n *" + FOODCON_SET_COMMAND + \
+                   "* `1`, `2`, `3`, `4` or `5` - Sets the FOODCON level " \
+                   "to the specified value. \n *" + FOODCON_SET_FOOD_DETAILS + "* " \
+                                                                               "`name/types of food` - Adds this to " \
+                                                                               "the `status` command \n *" \
+                   + FOODCON_SET_FOOD_LOCATION + "* `location of food` - Adds this to the `status` command"
 
     # Sends the response back to the channel
     slack_client.api_call(
         "chat.postMessage",
-        channel = channel,
-        text = response or default_response
+        channel=channel,
+        text=response or default_response
     )
 
+
 if __name__ == "__main__":
-    if slack_client.rtm_connect(with_team_state = False):
+    if slack_client.rtm_connect(with_team_state=False):
         print("Starter Bot connected and running!")
         # Read bot's user ID by calling Web API method `auth.test`
         starterbot_id = slack_client.api_call("auth.test")["user_id"]
