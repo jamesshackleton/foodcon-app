@@ -14,6 +14,7 @@ RTM_READ_DELAY = 1  # 1 second delay between reading from RTM
 FOODCON_BOT_VERSION = "v0.2 - Early Alpha - Now with crappy food and location commands!"
 FOODCON_HELP_COMMAND = "help"
 FOODCON_SET_COMMAND = "set "
+FOODCON_LOG_COMMAND = "log "
 FOODCON_STATUS_COMMAND = "status"
 FOODCON_SET_FOOD_DETAILS = "food "
 FOODCON_SET_FOOD_LOCATION = "location "
@@ -65,6 +66,21 @@ def handle_command(command, channel):
 
     # This is where you start to implement more commands!
 
+    # ========================================= LOG ====================================================================
+
+    if command.casefold().startswith(FOODCON_LOG_COMMAND):
+
+            command_parameters = command.split(" ", 3)
+
+            if len(command_parameters) is not 4:
+                response = "Incorrect number of arguments. Please try again with: log payer payee amount reason"
+            else:
+                foodcon_level = command_parameters[1]
+                foodcon_food = command_parameters[2]
+                foodcon_location = command_parameters[3]
+
+                response = "FOODCON " + foodcon_level + ": " + foodcon_food + " available at " + foodcon_location + "! Enjoy!"
+
     # ========================================= SET ====================================================================
 
     if command.casefold().startswith(FOODCON_SET_COMMAND):
@@ -79,6 +95,8 @@ def handle_command(command, channel):
         foodcon_level = str(5)
         foodcon_food = 'No food'
         foodcon_location = 'No location'
+
+    # ========================================= BOI ====================================================================
 
     if command == "boi":
         response = BOI_DOT_GIF
