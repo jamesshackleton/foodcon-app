@@ -11,10 +11,10 @@ starterbot_id = None
 
 # constants
 RTM_READ_DELAY = 1  # 1 second delay between reading from RTM
-FOODCON_BOT_VERSION = "v0.2 - Early Alpha - Now with crappy food and location commands!"
+FOODCON_BOT_VERSION = "v0.4 - Early Alpha - Now with single line commands!"
 FOODCON_HELP_COMMAND = "help"
 FOODCON_SET_COMMAND = "set "
-FOODCON_LOG_COMMAND = "log "
+FOODCON_LEVEL_COMMAND = "level "
 FOODCON_STATUS_COMMAND = "status"
 FOODCON_SET_FOOD_DETAILS = "food "
 FOODCON_SET_FOOD_LOCATION = "location "
@@ -68,12 +68,12 @@ def handle_command(command, channel):
 
     # ========================================= LOG ====================================================================
 
-    if command.casefold().startswith(FOODCON_LOG_COMMAND):
+    if command.casefold().startswith(FOODCON_SET_COMMAND):
 
             command_parameters = command.split(" ", 3)
 
             if len(command_parameters) is not 4:
-                response = "Incorrect number of arguments. Please try again with: log payer payee amount reason"
+                response = "Incorrect number of arguments. Please try again with: log foodcon_level food location. Each argument must be separated by a space. For multiple word arguments, please join the words with an underscore or similar method."
             else:
                 foodcon_level = command_parameters[1]
                 foodcon_food = command_parameters[2]
@@ -83,14 +83,14 @@ def handle_command(command, channel):
 
     # ========================================= SET ====================================================================
 
-    if command.casefold().startswith(FOODCON_SET_COMMAND):
-        option = command.casefold().split(FOODCON_SET_COMMAND)[1]
+    if command.casefold().startswith(FOODCON_LEVEL_COMMAND):
+        option = command.casefold().split(FOODCON_LEVEL_COMMAND)[1]
         one_to_four = ["1", "2", "3", "4"]
         if option in one_to_four:
             response = ":alert: FOODCON RAISED TO FOODCON " + option + ". I REPEAT. *FOODCON " + option + " *. :alert:"
             foodcon_level = option
 
-    if command.casefold().startswith(FOODCON_SET_COMMAND) and option == "5":
+    if command.casefold().startswith(FOODCON_LEVEL_COMMAND) and option == "5":
         response = "FOODCON SET TO FOODCON5. I REPEAT. *FOODCON 5*. STAND DOWN."
         foodcon_level = str(5)
         foodcon_food = 'No food'
@@ -132,15 +132,17 @@ def handle_command(command, channel):
     # ========================================= HELP ===================================================================
 
     if command.casefold() == FOODCON_HELP_COMMAND:  # monstrosity
-        response = "FOODCON App - " + FOODCON_BOT_VERSION + "\n This is currently a primitive bot, all commands must " \
-                                                            "be " \
-                                                            "'@foodcon `command`'\n Commands: \n \n *" + FOODCON_STATUS_COMMAND + \
-                   "* - Returns the current FOODCON level. \n *" + FOODCON_SET_COMMAND + \
-                   "* `1`, `2`, `3`, `4` or `5` - Sets the FOODCON level " \
-                   "to the specified value. \n *" + FOODCON_SET_FOOD_DETAILS + "* " \
-                                                                               "`name/types of food` - Adds this to " \
-                                                                               "the `status` command \n *" \
-                   + FOODCON_SET_FOOD_LOCATION + "* `location of food` - Adds this to the `status` command"
+        response = "FOODCON App - " + FOODCON_BOT_VERSION + "\n For single line setting of Foodcon use: @FOODCON_BOT " + \
+                FOODCON_SET_COMMAND + " followed by level food location. E.g.: @FOODCON_BOT " + FOODCON_SET_COMMAND + \
+                " 1 Samosas Kitchen \n  Each argument must be separated by a space. For multiple word arguments, " \
+                "please join the words with an underscore or similar method. \n " \
+                "To update level, food or location individually, use @FOODCON_BOT followed by " + FOODCON_LEVEL_COMMAND + ", " + FOODCON_SET_FOOD_DETAILS + " or " + FOODCON_SET_FOOD_LOCATION + "" \
+                " and the value to set. E.g.: @FOODCON_BOT food doughnuts. \n" \
+                " To see current Foodcon status, use @FOODCON_BOT status."
+
+
+
+
 
     # Sends the response back to the channel
     slack_client.api_call(
