@@ -1,11 +1,16 @@
 import os
 import time
-from enum import Enum
-from slackclient import SlackClient
 import re
+from dotenv import load_dotenv
+from slackclient import SlackClient
+
+from pathlib import Path  # python3 only
+env_path = Path('.') / '.env'
+load_dotenv(dotenv_path=env_path)
 
 # instantiate Slack client
-slack_client = SlackClient("xoxb-283048524000-383343305728-Q39KhMKxPfcY1a3g4XJThCiM")
+slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
+token = os.environ.get('SLACK_BOT_TOKEN')
 # starterbot's user ID in Slack: value is assigned after the bot starts up
 starterbot_id = None
 
@@ -153,6 +158,7 @@ def handle_command(command, channel):
 
 
 if __name__ == "__main__":
+    print(token)
     if slack_client.rtm_connect(with_team_state=False):
         print("Starter Bot connected and running!")
         # Read bot's user ID by calling Web API method `auth.test`
