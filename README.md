@@ -5,7 +5,7 @@ Base code used for a basic Python Slackbot found [here](https://www.fullstackpyt
 
 Probably not useful to you if you're not part of the bois
 
-## YOU NEED TO ADD .env TO THE PROJECT ROUTE AND ADD THE TOKEN (ASK @jamesshackleton FOR IT)
+## YOU NEED TO ADD .env TO THE PROJECT ROOT AND ADD THE TOKEN (ASK @jamesshackleton FOR IT)
 
 ## Pre-requisites (I think)
 
