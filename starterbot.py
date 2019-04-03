@@ -154,6 +154,7 @@ def handle_command(command, channel):
         "chat.postMessage",
         channel=channel,
         text=response or default_response
+        ##
     )
 
 
